@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>jQueryの練習</title>
+</head>
+<body>
+	<p>jQueryの練習</p>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script>
+		/*
+
+		●セレクタ：処理対象となるDOM要素を指定する記法 $('p')
+			html要素の場合は、そのまま
+			id #main
+			class .item
+		　セレクタメソッド
+		 	> 直下の子要素
+			  それ以下の要素（スペース）
+			, 複数の要素
+			+ 隣接する要素
+
+		●メソッド：処理 .css('color', 'red')
+					..で処理を追加していくことができる（メソッドチェーン）
+
+
+
+
+		●idやclassをつかってみよう
+
+			こうも書けるが、
+			$(document).read(functon() {
+			$(function() {
+				//pの要素を、赤色にして、ゆっくり隠す
+				$('p').css('color', 'red').hide('slow');
+				//id=sub cssを適用
+				$('#sub').css('color', 'red');
+				//class =item cssを適用
+				$('.item').css('color', 'red');
+				//main直下のあるクラスのみを指定したい場合
+				$('#main > .item').css('color', 'red');
+				//mainの下のあるクラスのみを指定したい場合
+				$('#main .item').css('color', 'red');
+				//複数、隣接するの要素を指定したい場合
+				$('p, .item').css('color', 'red');
+				$('.item, .item').css('color', 'red');
+
+				$('input[type=radio]').button();
+				//inputタグで、type=radioのものに、buttonのアクションを。
+			});
+
+			<ul id="sub">
+				<li>3-0</li>	//li[0]
+				<li>3-1</li>	//li[1]
+				<li>3-2</li>	//li[2]
+				<li>3-3</li>	//li[3]
+				<li>3-4</li>	//li[4]
+			</ul>
+
+			// :eq() (id = sub直下のliの3番目)
+			$("#sub > li:eq(2)")
+			//:gt() glater?than / less than 1番目より大きい / 小さいところを指定
+			$("#sub > li:gt(1)") / li:lt(1)
+			// :odd / :even で、奇数 / 偶数指定
+			$("#sub > li:odd")
+			//contains()（リストになにを含むか）
+			$("#sub > li:contains('　')")
+			//:first, :last
+			containsと同じ
+
+			//id = subと親要素にcssを適用
+			$("#sub").parent().css('color', 'red');
+			//上記、子要素なら、children()
+
+			//id=sub list(2)の次にcssを適用。
+			$("#sub > li:eq(2)").next().css
+			//前なら .prev()
+			//その要素と同列にある要素で、その要素以外のものをすべて指定　.siblings()
+
+		●属性セレクタ
+
+			<p><a href="http://google.com">Google</a></p>
+			<p><a href="http://yahoo.co.jp">Yahoo!</a></p>
+			<p><a href="http://dotinstall.com">Dotinstall</a></p>
+
+			//aで、hrefがgoogleのものに、cssを適用
+			$('a[href="http://google.com"]').css('background', 'red');
+			href = ～の「=」の種類
+			= 等しい
+			!= 等しくない
+			*= ～を含む
+			^= ～から始まる
+			$= ～でおわる
+
+		●css設定＆取得
+			//色を赤にするという意味
+			$('p').css('color', 'red');
+			//pの色を取得する（取得の場合は、値がいらない）
+			$('p').css('color');
+
+				console.log($('p').css('color'));
+				>>>rgb(255, 0, 0)つまり、「赤」とでる。
+
+			// andClass removeClassでまとめて追加もできる。
+			１
+				<style>
+					.myStyle {
+						border: 5px solid green;
+						font-size: 48px;
+					}
+				</style>
+				をheadで指定
+			２
+			//要素pにmyStyleクラスを適用／removeで適用をやめる
+			 $('p').addClass('myStyle');
+		●attr、data
+			//aのhrefをgetAttribute的な（googleのURLを得られる）
+			$('a').attr('href')
+			//属性の設定
+			$('a').attr('href', 'http:/google.co.jp')
+			dataってのもある
+
+		●.text(' ') ～に書き換える
+		●.html(' ') ～に書き換える（html文）
+		●.val inputタグのvalueをgetできる
+			$('input').val();
+			//以下の文で、値を（）の内容に書き換える
+			$('input').val('hello, again!');
+		●.empty() p要素はあるんだけど、表示はなくす
+		●.rermove() p要素も表示も消す
+
+
+		●要素を追加する
+			before insertBefore / after insertAfter
+				//ulのliの2こめの前に、(li)をいれる
+					var li = $('<li>').text('just added');
+					$('ul > li:eq(1)').before(li);
+				//こういう書き方もできる
+					li.insertBefore($('ul > li:eq(1)'))
+			pretend pretendTo / append appendTo
+				//ulの子要素の一番前にいれる
+					$('ul').pretend(li);
+				//こういう書き方もできる
+					li.appendTo($('ul'));
+
+		●エフェクトを使う
+			<div id="box" style="width:100px; height:100px; background:red;"></div>
+
+			hide / show　しゅっと隠す、表示
+			fadeOut / fadeIn ふわっと隠す、表示
+			toggle　消えてたら表示、表示してたら、消す
+				//ぱっと消える
+					$('#box').hide();
+					hide('slow')、hide(800)ミリ秒指定 でhideのスピードも設定可能
+
+			なんとかかんとか関数
+				//boxがfadeOutしたタイミングでファンクション実行
+					$('#box').fadeOut(800, function() {
+						alert("gone!");
+					});
+
+		●イベントを使う
+			click
+				//clickしたときになにかを行う
+					$('#box').click(function() {
+						alert("hi!");
+					});
+			mouseover(mouseが対象にかかったときに、アクション)
+			※overだけだと、色が緑のままになる
+			※以下のように、連続して書くこともできる
+				//mouseがboxにかかったときに、boxの背景を緑に変える
+					$('#box')
+						//mouseがのっかってるとき
+						.mouseover(function() {
+							$(this).css('background', 'green')
+						})
+						//mouseがのらないとき
+						.mouseout(function() {
+							$(this).css('background', 'red')
+						})
+						//mouseが対象物の上で動いてるとき
+						//function eventのe で引数が必要
+						//eventのpageのX座標を表示する
+						.mousemove(function(e) {
+							$(this).text('e.pageX')
+						});
+
+		●フォーム部品に関するイベント
+				<input type="text" id="name">
+				<select id="members" name="members">
+					<option>taguchi</option>
+					<option>fkoji</option>
+					<option>dotinstall</option>
+				</select>
+			.focus 選択されているとき / .blur 選択がはずれたとき
+				$(function() {
+					$('#name')
+						.focus(function() {
+						$(this).css('background', 'red');
+						})
+						.blur(function() {
+						$(this).css('background', 'white');
+						});
+
+			.members
+				//対象が変わったら、functionをおこなう
+				//今回の場合は、selectボックスでmembersを選んだら。
+					$('#members').change(function() {
+						alert('changed!');
+					});
+				}
+
+
+		●onメソッド
+				<button>Add!</button>
+			//buttonがclickされたら、<p class=vanish>vanish!</p>をつくる
+			//そのあと、this（button）のbeforeにそれをつくる
+				$(function(){
+					$('button').click(function() {
+						var p = $('<p>').text('vanish!').addClass('vanish');
+						$(this).before(p);
+					});
+				}
+
+			//このイベントは、ドキュメントが読みこまれた状態に対してできるもの
+			※onメソッドとはイベントがおこったあとの状態で使う
+				//.vanishがclickされたときに、functionする。
+				$(対象の親要素).on(対象に対して起こるイベント, 対象, イベントの内容)
+				$('body').on('click', '.vanish', function() {
+					$(this).remove();
+				});
+
+		●Ajax エイジャックス JSONで値を返す、意味ワカラン
+				Asynchronous JavaScript + XML
+				画面内だけでいろいろ行えるため、動作が楽。
+				Asynchronous = 非同期（処理が終わる前に次の処理に移る）
+			load
+				//クリックされたら id = resultにmore.html（別のファイル）の内容をloadする
+
+				$('button').click(function() {
+					$('#result').load('more.html');
+				});
+
+			非同期通信の仕組み
+				//buttonをclickしたら、メッセージを表示し、
+				//そのメッセージを赤色にする
+
+				//第二引数に関数を与えてあげればOK（これをコールバック関数をいう）
+					$('button').click(function() {
+						$('#result').load('more.html', function() {
+							$('#message').css('color', 'red');
+						});
+					});
+
+			$.get データを取得 / $.post データを書き換える
+					<p>
+						<input type="text" name="name" Id="name">
+						<input type="button" id="greet" value="Greet!">
+					</p>
+					<div id="result"></div>
+
+
+
+				//greetがクリックされたら、以下のファンクションを実行する
+				greet.php（外部）ファイル内のデータの、
+				nameにid=nameの値を入れたものを
+				ファンクションする（id=resultのhtmlに書き出す）					$('#greet').click(function(){
+
+						$.get('greet.php', {
+							name: $('#name').val()
+						}, function(data){
+							$('#result').html(data);
+						});
+					});
+
+		●jQueryUI user interface
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		*/
+
+	</script>
+</body>
+</html>
